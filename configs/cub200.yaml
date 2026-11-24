@@ -1,0 +1,76 @@
+# ==========================================
+# RATS configuration: CUB-200-2011
+# Default = RATS (Sampling-Only). Other methods are selected with
+# --set overrides using provided scripts
+# ==========================================
+experiment_name: "cub200"
+output_dir: "runs/cub200"
+checkpoint_dir: "checkpoints/cub200"
+
+seed: 1
+cuda_deterministic: True
+
+# --- Dataset (paths are relative to the repository root) ---
+dataset: "cub_200"
+data_root: "data/CUB_200/CUB_200_2011"
+
+# --- Model ---
+model_type: "resnet50"
+pretrained: True
+emb_dim: 128
+imagenet_pretrained: True
+ssl_pretrained_path: " "
+
+# --- Training ---
+epochs: 100
+batch_size_p: 32             # identities per batch
+batch_size_k: 4              # samples per identity
+image_size: 256
+crop_size: 224
+
+loss_type: "triplet"
+sampling_strategy: "distance_weighted"   # used only when rl.enabled is False
+                                         # options: "batch_hard", "semi_hard", "distance_weighted"
+
+# --- Optimization ---
+lr: 0.00001
+weight_decay: 0.0004
+warmup: False
+warmup_epochs: 5
+lr_decay: True
+lr_decay_step: 50       # half of training
+lr_decay_gamma: 0.3
+
+# --- Margin ---
+init_margin: 0.2
+
+# ==========================================
+# RL miner (RATS)
+# ==========================================
+rl:
+  enabled: True
+  adaptive_margin: False                   # True = Joint variant
+  adaptive_sampling: True
+  adaptive_sampling_strategy: "weighting"  # reported experiments use "weighting"
+
+  margin_step: 0.01
+  min_margin: 0.15
+  max_margin: 0.25
+  region_step: 0.10                        # Delta_l
+  logit_clamp: 1.2
+
+  method: "PPO"                            # "PPO", "A2C", "REINFORCE"
+  learning_rate: 0.0001
+
+  rl_steps_per_epoch: 8                    # T, observation windows per epoch
+  state_windows: [4, 8, 16]                # 0.5, 1, 2 epochs at T = 8
+
+  lambda_ratio: 0.5                        # lambda_util
+  lambda_delta: 0.0
+  ema_alpha: 0.0
+
+  entropy_beta_decay: False
+  entropy_beta: 0.0
+
+  ppo_epochs: 4
+  ppo_clip: 0.2

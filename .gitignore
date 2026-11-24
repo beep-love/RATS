@@ -1,0 +1,34 @@
+# --- Repo Ignored Folders ---
+
+outputs/
+data/
+slurm_scripts/
+figures/
+results/
+logs/
+runs/
+checkpoints/
+
+# --- Python & OS Garbage ---
+__pycache__*
+*.py[cod]
+.DS_Store
+
+# --- Environments ---
+.env
+.venv
+env/
+venv/
+anaconda/
+
+# --- IDE Settings (Optional but recommended) ---
+.vscode/
+
+# --- Outputs & Checkpoints ---
+*.jpg
+*.pt
+*.dat
+*.pth
+*.ckpt
+*.pkl
+wandb/
